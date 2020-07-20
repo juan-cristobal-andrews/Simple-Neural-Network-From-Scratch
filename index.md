@@ -132,7 +132,7 @@ yHat <- Forward(X,w1,w2)
 J <- sum(((yHat-y)^2)/2)
 J
 ```
-Output: 0.0406940979768502
+<img src="images/output1.png" width="146" height="26" />
 
 ### 3.1.2 We evaluate the results
 
@@ -191,7 +191,8 @@ yHat <- Forward(X,w1,w2)
 J <- sum(((yHat-y)^2)/2)
 J
 ```
-Output: 0.0394141923624708
+<img src="images/output2.png" width="144" height="21" />
+
 
 <b>Note:</b> We should observe a small improvement in cost due to the new parameters.
 
