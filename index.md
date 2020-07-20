@@ -239,7 +239,7 @@ while(round(FinalError,5) <= round(InitialError,5)) {
 }
 ```
 
-<img src="images/table2.jpg" width="320" height="513" />
+<img src="images/table2.png" width="320" height="513" />
 
 ### 4.1 We evaluate again
 
@@ -254,6 +254,7 @@ Improvement: ",round(Improvement,2)*100,"%
 Took ",i," Iterations",sep=""))
 ```
 
+<img src="images/chart3.png" width="431" height="536" />
 
 
 
