@@ -2,7 +2,7 @@
 
 The idea of this notebook is to explore a step-by-step approach to create a <b>single layer neural network</b> without the help of any third party library. In practice, this neural network should be useful enough to generate a simple non-linear regression model, though it's final goal is to help us understand the inner workings of one.
 
-<img src="images/simpleneuralnetwork.jpg" width="495" height="406" />
+<img src="images/simpleneuralnetwork.jpg" width="495"/>
 
 ## 1. Working Data
 
@@ -312,7 +312,7 @@ cbind(xTrain,Score=yTrain)
 as.integer(round(Forward(xTrain/max(X),w1,w2)*max(y)))
 ```
 
-<img src="images/table5.png" width="38" height="19" />
+<img src="images/table5.png" width="19" height="38" />
 
 Seems pretty close to the real expected score (3292)
 
