@@ -257,6 +257,114 @@ Took ",i," Iterations",sep=""))
 
 <img src="images/chart3.png" width="431" height="536" />
 
+As seen in the results above it seems our model was able to predict very similar scores to our "Secret Function", even though the actual model is a mix of a more complex combination of vector products and non-linear functions. This means our new model approximates quite well our actual "Secret Function Model".
+
+## 5. How our training improved our model?
+
+```R
+costTrain$Data <- "Train"
+ggplot(costTrain, aes(x=Training, y=Cost)) + geom_line()
+```
+
+<img src="images/cost.png" width="420" height="420" />
+
+As seen above it seems that there was little cost improvement after 1k iterations.
+
+## 6. Evaluation on known (in sample) Data
+
+```R
+Train <- X
+```
+```R
+# Note: this output represents a normalized representation of Study and Sleep
+cbind(Train,RealScore=secretFunction(Train),PredictedScore=Forward(Train,w1,w2))
+```
+
+<img src="images/table3.png" width="310" height="315" />
+
+<b>Lets translate this to our original scale</b>
+
+```R
+X <- data.frame(Study=Study,Sleep=Sleep)
+y <- secretFunction(X)
+cbind(X,Score=secretFunction(X),Prediction=round(Forward(Train,w1,w2)*max(y)))
+```
+
+<img src="images/table4.png" width="214" height="291" />
+
+As expected, it seems our model provide us very good approximations to actual test scores.
+
+## 7. Evaluation on unknown (out of sample) data
+
+Let's evaluate which test score we should expect from a student who <b>studied 16 hours and slept 56</b>
+
+```R
+xTrain <- data.frame(Study=16,Sleep=56)
+yTrain <- secretFunction(xTrain)
+cbind(xTrain,Score=yTrain)
+```
+
+<img src="images/table5.png" width="145" height="108" />
+
+<b>What is our predicted score?</b>
+
+```R
+as.integer(round(Forward(xTrain/max(X),w1,w2)*max(y)))
+```
+
+<img src="images/table5.png" width="38" height="19" />
+
+Seems pretty close to the real expected score (3292)
+
+### Simulation: How our model predicts new data
+
+Lets simulate 72 students, starting from a student who studied 0 hours and slept 72, up to the opposite scenario.
+
+```R
+Test <- data.frame(Study=seq(0,72))
+Test$Sleep <- 72-Test$Study
+Test$Score <- secretFunction(Test)
+Test$Prediction <- as.integer(round(Forward(Test/max(X),w1,w2)*max(y)))
+Test$SquaredError <- (Test$Score - Test$Prediction)^2
+Test
+```
+
+<img src="images/table4.png" width="321" height="554" />
+
+## 8. Final Thoughts
+
+<b>Let's see how well our model predicts outside our training space.</b>
+
+```R
+ggplot(Test, aes(x=Study, y=sqrt(SquaredError))) +
+    geom_line() +
+    geom_vline(xintercept=min(X$Study), linetype="dashed", color = "red") +
+    geom_vline(xintercept=max(X$Study), linetype="dashed", color = "red")
+cat(paste("Training Space Known by model:\n   Min Study Hours:",min(X$Study)),"\n   Max Study Hours:",max(X$Study))
+RMSEWithin <- round(sqrt(mean(Test$SquaredError[which(Test$Study >= min(X$Study) & Test$Study <=max(X$Study))])))
+RMSEBelow <- round(sqrt(mean(Test$SquaredError[which(Test$Study < min(X$Study))])))
+RMSEAbove <- round(sqrt(mean(Test$SquaredError[which(Test$Study > max(X$Study))])))
+cat(paste("\n\nAverage Root Mean Squared Error:\n   Below Known Range:",RMSEBelow, "\n   Within Known Range:",RMSEWithin,"\n   Above Known Range:",RMSEAbove))
+```
+
+<img src="images/chart4.png" width="432" height="537" />
+
+As observed by the errors from the table and the plot above, it seems that our new function had somewhat better prediction capabilities within the training space which is represented by our vertical lines. As expected, our new model is not able to predict out-of-sample data that falls outside of our training space.
+
+In other words, our model is able to interpolate quite well the approximation of Students score by providing their time of Study and Sleep, in contrast, is not able to extrapolate very well outliers or data outside its training space.
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
