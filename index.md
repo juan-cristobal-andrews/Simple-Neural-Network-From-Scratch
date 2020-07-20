@@ -312,7 +312,7 @@ cbind(xTrain,Score=yTrain)
 as.integer(round(Forward(xTrain/max(X),w1,w2)*max(y)))
 ```
 
-<img src="images/table5.png" width="19" height="38" />
+<img src="images/output3.png" width="38" height="19" />
 
 Seems pretty close to the real expected score (3292)
 
@@ -329,7 +329,7 @@ Test$SquaredError <- (Test$Score - Test$Prediction)^2
 Test
 ```
 
-<img src="images/table4.png" width="321" height="554" />
+<img src="images/table6.png" width="321" height="554" />
 
 ## 8. Final Thoughts
 
