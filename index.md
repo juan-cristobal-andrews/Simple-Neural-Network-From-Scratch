@@ -142,7 +142,7 @@ resultPlot <- as.data.frame(rbind(cbind(y,1:nrow(y),"Real"),cbind(round(yHat,2),
 ggplot(resultPlot, aes(x=V2, y=V1, fill=V3)) + geom_bar(stat="identity", position="dodge")
 ```
 
-<img src="images/chart1.jpg" width="420" height="420" />
+<img src="images/chart1.png" width="420" height="420" />
 
 ### 3.2 Back propagation
 
@@ -203,7 +203,7 @@ resultPlot <- as.data.frame(rbind(cbind(y,1:nrow(y),"Real"),cbind(round(yHat,2),
 ggplot(resultPlot, aes(x=V2, y=V1, fill=V3)) + geom_bar(stat="identity", position="dodge")
 ```
 
-<img src="images/chart2.jpg" width="420" height="420" />
+<img src="images/chart2.png" width="420" height="420" />
 
 ## 4. Backpropagate, Forwardpropagate and repeat
 
