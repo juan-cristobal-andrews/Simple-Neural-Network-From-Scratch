@@ -116,5 +116,151 @@ xTest <- xTest/max(X)
 yTest <- secretFunction(xTest)/max(y)
 ```
 
+## 3. Propagation
+
+### 3.1 Forward Propagation
+
+```R
+# We propagate
+yHat <- Forward(X,w1,w2)
+```
+
+### 3.1.1 Cost Calculation
+
+```R
+# We calculate cost
+J <- sum(((yHat-y)^2)/2)
+J
+```
+Output: 0.0406940979768502
+
+### 3.1.2 We evaluate the results
+
+```R
+library(ggplot2)
+resultPlot <- as.data.frame(rbind(cbind(y,1:nrow(y),"Real"),cbind(round(yHat,2),1:nrow(yHat),"Prediccion")))
+ggplot(resultPlot, aes(x=V2, y=V1, fill=V3)) + geom_bar(stat="identity", position="dodge")
+```
+
+<img src="images/chart1.jpg" width="420" height="420" />
+
+### 3.2 Back propagation
+
+```R
+# We derivate W2 in respect to the cost
+dJdW2 <- function(X,w1,w2) { 
+  X <- cbind(X[,1],X[,1])
+  z2 <- X %*% w1
+  a2 <- sigmoid(z2)
+  z3 <- a2 %*% w2
+  yHat <- sigmoid(z3)
+  delta3 <- -(y-yHat)*sigmoidPrime(z3)
+  cost <- t(a2) %*% delta3
+  return(cost)
+}
+
+# We adjust W2
+w2 <- w2 - (LearningRate * dJdW2(X,w1,w2))
+
+# We derivate W1 in respect to the cost
+dJdW1 <- function(X,w1,w2) { 
+  X <- cbind(X[,1],X[,1])
+  z2 <- X %*% w1
+  a2 <- sigmoid(z2)
+  z3 <- a2 %*% w2
+  yHat <- sigmoid(z3)
+  delta3 <- -(y-yHat)*sigmoidPrime(z3)
+  delta2 <- (delta3 %*% t(w2)) * sigmoidPrime(z2)
+  cost <- t(X) %*% delta2
+  return(cost)
+}
+w1 <- w1 - (LearningRate * dJdW1(X,w1,w2))
+```
+
+### 3.3 We forward propagate again
+
+```R
+# We propagate Again!
+yHat <- Forward(X,w1,w2)
+```
+
+### 3.3.1 New Cost Calculation
+
+```R
+# We calculate cost
+J <- sum(((yHat-y)^2)/2)
+J
+```
+Output: 0.0394141923624708
+
+<b>Note:</b> We should observe a small improvement in cost due to the new parameters.
+
+### 3.3.2 We evaluate again
+
+```R
+library(ggplot2)
+resultPlot <- as.data.frame(rbind(cbind(y,1:nrow(y),"Real"),cbind(round(yHat,2),1:nrow(yHat),"Prediccion")))
+ggplot(resultPlot, aes(x=V2, y=V1, fill=V3)) + geom_bar(stat="identity", position="dodge")
+```
+
+<img src="images/chart2.jpg" width="420" height="420" />
+
+## 4. Backpropagate, Forwardpropagate and repeat
+
+We will now repeat the previous process until we cannot minimize our cost any more.
+When this happens, it means we have found a <b>local minima</b>. We will stop when we observe that error calculated at <b>step n+1</b> is equal or superior than the one found in <b>step n</b>, meaning we cannot improve any more with out jumping around the local minima.
+
+```R
+costTrain <- data.frame(Training=NA,Cost=NA)
+costTest <- data.frame(Training=NA,Cost=NA)
+InitialError <- sum((y-yHat)^2)
+FinalError <- 0
+i <- 1
+
+while(round(FinalError,5) <= round(InitialError,5)) {
+  w1 <- w1 - (LearningRate * dJdW1(X,w1,w2))
+  w2 <- w2 - (LearningRate * dJdW2(X,w1,w2))
+  yHat = Forward(X,w1,w2)
+  costo <- cost(y,yHat)
+
+  costTrain[i,]$Training <- i
+  costTrain[i,]$Cost <- costo
+  
+  FinalError <- sum((y-yHat)^2)
+
+  i <- i + 1
+  if(i %% 1000==0) {
+    # Print on the screen some message
+    cat(paste0("Iteration ", i,": ",FinalError,"\n"))
+  }
+  if(i == 30000) {
+      break()
+  }
+}
+```
+
+<img src="images/table2.jpg" width="320" height="513" />
+
+### 4.1 We evaluate again
+
+```R
+library(ggplot2)
+resultPlot <- as.data.frame(rbind(cbind(y,1:nrow(y),"Real"),cbind(round(yHat,2),1:nrow(yHat),"Prediccion")))
+ggplot(resultPlot, aes(x=V2, y=V1, fill=V3)) + geom_bar(stat="identity", position="dodge")
+Improvement <- (InitialError-FinalError)/InitialError
+cat(paste("Initial Error: ",InitialError,"
+Final Error: ",FinalError,"
+Improvement: ",round(Improvement,2)*100,"%
+Took ",i," Iterations",sep=""))
+```
+
+
+
+
+
+
+
+
+
 
 
