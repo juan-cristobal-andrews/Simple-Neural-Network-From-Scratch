@@ -2,7 +2,8 @@
 
 The idea of this notebook is to explore a step-by-step approach to create a <b>single layer neural network</b> without the help of any third party library. In practice, this neural network should be useful enough to generate a simple non-linear regression model, though it's final goal is to help us understand the inner workings of one.
 
-<img src="images/simpleneuralnetwork.jpg" width="495"/>
+<p align="center"><img src="images/simpleneuralnetwork.jpg" width="495"/></p>
+
 
 ## 1. Working Data
 
@@ -132,7 +133,7 @@ yHat <- Forward(X,w1,w2)
 J <- sum(((yHat-y)^2)/2)
 J
 ```
-<img src="images/output1.png" width="146" height="26" />
+<img src="images/output1.png" width="146"/>
 
 ### 3.1.2 We evaluate the results
 
@@ -142,7 +143,7 @@ resultPlot <- as.data.frame(rbind(cbind(y,1:nrow(y),"Real"),cbind(round(yHat,2),
 ggplot(resultPlot, aes(x=V2, y=V1, fill=V3)) + geom_bar(stat="identity", position="dodge")
 ```
 
-<img src="images/chart1.png" width="420" height="420" />
+<img src="images/chart1.png" width="420"/>
 
 ### 3.2 Back propagation
 
@@ -191,7 +192,7 @@ yHat <- Forward(X,w1,w2)
 J <- sum(((yHat-y)^2)/2)
 J
 ```
-<img src="images/output2.png" width="144" height="21" />
+<img src="images/output2.png" width="144"/>
 
 
 <b>Note:</b> We should observe a small improvement in cost due to the new parameters.
@@ -204,7 +205,7 @@ resultPlot <- as.data.frame(rbind(cbind(y,1:nrow(y),"Real"),cbind(round(yHat,2),
 ggplot(resultPlot, aes(x=V2, y=V1, fill=V3)) + geom_bar(stat="identity", position="dodge")
 ```
 
-<img src="images/chart2.png" width="420" height="420" />
+<img src="images/chart2.png" width="420"/>
 
 ## 4. Backpropagate, Forwardpropagate and repeat
 
@@ -240,7 +241,7 @@ while(round(FinalError,5) <= round(InitialError,5)) {
 }
 ```
 
-<img src="images/table2.png" width="320" height="513" />
+<img src="images/table2.png" width="320"/>
 
 ### 4.1 We evaluate again
 
@@ -255,7 +256,7 @@ Improvement: ",round(Improvement,2)*100,"%
 Took ",i," Iterations",sep=""))
 ```
 
-<img src="images/chart3.png" width="431" height="536" />
+<img src="images/chart3.png" width="431"/>
 
 As seen in the results above it seems our model was able to predict very similar scores to our "Secret Function", even though the actual model is a mix of a more complex combination of vector products and non-linear functions. This means our new model approximates quite well our actual "Secret Function Model".
 
@@ -266,7 +267,7 @@ costTrain$Data <- "Train"
 ggplot(costTrain, aes(x=Training, y=Cost)) + geom_line()
 ```
 
-<img src="images/cost.png" width="420" height="420" />
+<img src="images/cost.png" width="420"/>
 
 As seen above it seems that there was little cost improvement after 1k iterations.
 
@@ -280,7 +281,7 @@ Train <- X
 cbind(Train,RealScore=secretFunction(Train),PredictedScore=Forward(Train,w1,w2))
 ```
 
-<img src="images/table3.png" width="310" height="315" />
+<img src="images/table3.png" width="310"/>
 
 <b>Lets translate this to our original scale</b>
 
@@ -290,7 +291,7 @@ y <- secretFunction(X)
 cbind(X,Score=secretFunction(X),Prediction=round(Forward(Train,w1,w2)*max(y)))
 ```
 
-<img src="images/table4.png" width="214" height="291" />
+<img src="images/table4.png" width="214"/>
 
 As expected, it seems our model provide us very good approximations to actual test scores.
 
@@ -304,7 +305,7 @@ yTrain <- secretFunction(xTrain)
 cbind(xTrain,Score=yTrain)
 ```
 
-<img src="images/table5.png" width="145" height="108" />
+<img src="images/table5.png" width="145"/>
 
 <b>What is our predicted score?</b>
 
@@ -312,7 +313,7 @@ cbind(xTrain,Score=yTrain)
 as.integer(round(Forward(xTrain/max(X),w1,w2)*max(y)))
 ```
 
-<img src="images/output3.png" width="38" height="19" />
+<img src="images/output3.png" width="38" />
 
 Seems pretty close to the real expected score (3292)
 
@@ -329,7 +330,7 @@ Test$SquaredError <- (Test$Score - Test$Prediction)^2
 Test
 ```
 
-<img src="images/table6.png" width="321" height="554" />
+<img src="images/table6.png" width="321" />
 
 ## 8. Final Thoughts
 
@@ -347,7 +348,7 @@ RMSEAbove <- round(sqrt(mean(Test$SquaredError[which(Test$Study > max(X$Study))]
 cat(paste("\n\nAverage Root Mean Squared Error:\n   Below Known Range:",RMSEBelow, "\n   Within Known Range:",RMSEWithin,"\n   Above Known Range:",RMSEAbove))
 ```
 
-<img src="images/chart4.png" width="432" height="537" />
+<img src="images/chart4.png" width="432" />
 
 As observed by the errors from the table and the plot above, it seems that our new function had somewhat better prediction capabilities within the training space which is represented by our vertical lines. As expected, our new model is not able to predict out-of-sample data that falls outside of our training space.
 
